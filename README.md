@@ -56,13 +56,25 @@ All other parameters are up to you. I recommend using HVM AMI's as they have bet
 When finished, simply launch and log into your cluster through the flintrock command line interface. I launch a custom AMI built from the Amazon Linux AMI.
 
 ## Installing Anaconda/Jupyter
-Installing Jupyter Notebook and its dependencies can be easily achieved by installing the Anaconda Python distribution. This will also include many important libraries such as numpy, scipy, matplotlib, pandas, etc. You can visit the installation page [here](https://www.continuum.io/downloads#). I download and install the Anaconda 4.2.0 Python 2.7 version while l
+Installing Jupyter Notebook and its dependencies can be easily achieved by installing the Anaconda Python distribution. This will also include many important libraries such as numpy, scipy, matplotlib, pandas, etc. You can visit the installation page [here](https://www.continuum.io/downloads#). I download and install the Anaconda 4.2.0 Python 2.7 version while logged into my Spark master with the following commands: 
+
+```
+[SparkMasterPublicDNS] wget https://repo.continuum.io/archive/Anaconda2-4.2.0-Linux-x86_64.sh
+[SparkMasterPublicDNS] sh Anaconda2-4.2.0-Linux-x86_64.sh
+```
+
+After installation, make sure you set your path to Anaconda properly as follows:
+```
+[SparkMasterPublicDNS]
+```
+Better yet, place this in your .bashrc file, and save the AMI (detailed in a later section). Next time you may launch clusters using your saved custom AMI through flintrock and your Anaconda path will be automatically set. 
 
 ## Running
 
 ## S3 Input/Output
 
-## Using your own AMIs
+## Using your own AMI
+You wouldn't want to download and install Anaconda everytime. 
 
 ## Next Steps
 The following are tasks that I am currently trying to figure out. They are not crucial but nice-to-have.
@@ -71,7 +83,7 @@ The following are tasks that I am currently trying to figure out. They are not c
 * How to shrink EBS volume size launches, EBS costs are greatly outweighing spot-requested EC2 instances cost
 
 ## Acknowledgements
-Much thanks to [Chris Goldsworthy](github.com/c4goldsw) for his help. 
+Many thanks to [Chris Goldsworthy](github.com/c4goldsw) for his help. 
 
 ## Sources
 * http://blog.insightdatalabs.com/jupyter-on-apache-spark-step-by-step/
