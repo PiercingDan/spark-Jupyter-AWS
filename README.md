@@ -149,9 +149,9 @@ The AWS command line interface is a terrific tool, and it comes installed with a
 ```
 [SparkMaster] aws s3 sync s3://DannysBucket/code $HOME/code
 ```
-When I'm finished working and ready to terminate by instances, I run the opposite sync:
+When I'm finished working and ready to terminate by instances, I run the opposite sync to save my work to S3:
 ```
-[SparkMaster] aws s3 sync $HOME/code s3://dluo96/code
+[SparkMaster] aws s3 sync $HOME/code s3://DannysBucket/code
 ```
 
 ## Using your own AMI
