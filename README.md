@@ -18,7 +18,7 @@ For the following tutorial, you will need:
 ## Why Flintrock
 There are many ways to set up spark with AWS EC2 instances, including:
 * Manual Set-up
-* [spark-ec2](https://github.com/amplab/spark-ec2) tool
+* [spark-ec2](https://github.com/amplab/spark-ec2)
 * [Amazon EMR](https://aws.amazon.com/emr/)
 * [**Flintrock**](https://github.com/nchammas/flintrock)
 
@@ -104,7 +104,7 @@ export PATH='/home/user/path/to/anaconda2/bin:$PATH'
 ```
 The environment variables `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` will allow you to access your S3 buckets in Spark. The rest of the commands set up necessary paths. Save your `.bashrc` file and source it.
 
-Now, we are going to run Jupyter with Pyspark. The following steps is modified from this [tutorial](http://blog.insightdatalabs.com/jupyter-on-apache-spark-step-by-step/). 
+Now, we are going to run Jupyter with Pyspark. The following steps are modified from this [tutorial](http://blog.insightdatalabs.com/jupyter-on-apache-spark-step-by-step/). 
 
 I put the following commands in a shell script `jupyter_setup.sh`.
 
@@ -121,9 +121,21 @@ Source `jupyter_setup.sh`. By default, jupyter should run on port 7777. Then, to
 ```
 [LocalComputer] ssh -i ~/path/to/AWSkeypair.pem -N -f -L localhost:7776:localhost:7777 ec2-user@SparkMasterPublicDNS
 ```
-The default user in flintrock is `ec2-user` so that will work most of the time. I've found, annoyingly, that ubuntu instances will require `ubuntu@SparkMasterPublicDNS` instaed.
+The default user in flintrock is `ec2-user` so that will work most of the time. I've found, annoyingly, that ubuntu instances will require `ubuntu@SparkMasterPublicDNS` instead.
 
-Alternatively, you can 
+Alternatively, you can configure your security group to allow your local computer to access the port directly. 
+
+Now, go to your browser and type in *localhost:7776*. You should see the jupyter interface displaying the contents of the directory of your Spark Master in which you ran `jupyter_setup.sh`.
+
+## Running Tests
+Now, you can run some basic tests on jupyter to make sure everything is set up correctly. While you do so, you can observe your progress on *SparkMasterPublicDNS:/8080* and *SparkMasterPublicDNS:/4040*. 
+
+Create a new notebook in jupyter. SparkContext should already be set up for you. Begin with the following test command:
+
+```
+In []:sc
+Out []:<pyspark.context.SparkContext at 0x7f4e436f3990>
+```
 
 ## S3 Input/Output
 Delete spark
