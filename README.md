@@ -83,7 +83,7 @@ The following are tasks that I am currently trying to figure out. They are not c
 * How to shrink EBS volume size launches, EBS costs are greatly outweighing spot-requested EC2 instances cost
 
 ## Acknowledgements
-Many thanks to [Chris Goldsworthy](www.github.com/c4goldsw) for his help. 
+Many thanks to [Chris Goldsworthy](https://github.com/c4goldsw) for his help. 
 
 ## Sources
 * http://blog.insightdatalabs.com/jupyter-on-apache-spark-step-by-step/
