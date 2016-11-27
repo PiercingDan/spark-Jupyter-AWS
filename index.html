@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="description" content="Spark-jupyter-aws : A guide on how to set up Jupyter with Pyspark painlessly on AWS EC2 clusters, supporting S3 I/O">
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Spark-jupyter-aws</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/PiercingDan/spark-Jupyter-AWS">View on GitHub</a>
+
+          <h1 id="project_title">Spark-jupyter-aws</h1>
+          <h2 id="project_tagline">A guide on how to set up Jupyter with Pyspark painlessly on AWS EC2 clusters, supporting S3 I/O</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/PiercingDan/spark-Jupyter-AWS/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/PiercingDan/spark-Jupyter-AWS/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>
+<a id="spark-with-jupyter-on-aws" class="anchor" href="#spark-with-jupyter-on-aws" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Spark with Jupyter on AWS</h1>
+
+<p><em>By Danny Luo</em></p>
+
+<p>A guide on how to set up Jupyter with Pyspark painlessly on AWS EC2 instances using the tool <a href="https://github.com/nchammas/flintrock">Flintrock</a>, with S3 I/O support. This guide will be updated as I discover more things.</p>
+
+<h2>
+<a id="introduction" class="anchor" href="#introduction" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Introduction</h2>
+
+<p>This guide was motivated by my involvement in the University of Toronto Data Science Team. The team recently undertook the Kaggle Competition: <a href="https://www.kaggle.com/c/outbrain-click-prediction">Outbrain Click Prediction</a>, in which one of the datasets was a large 88GB unzipped csv detailing the page views of users. To attempt to do any type of analysis with this particular dataset, it was obvious that we had use more powerful machines. My fellow big data enthuasiast and good friend, <a href="github.com/c4goldsw">Chris Goldsworthy</a>, suggested the idea of using Apache Spark, a fast big data parallel processing engine, to analyze this huge dataset. Chris and I had learned Spark on Databricks in preparation for Toronto's newest data hackathon <a href="http://hackondata.com/">HackOn(Data)</a>, at which we placed third for our project-<a href="https://github.com/c4goldsw/billboardPlacementTO">Optimal Digital Map Placement in Toronto</a>. We decided that we wanted to showcase to the rest of our Data Science Team the power of distributed computing to effortlessly crunch large datasets. We also wanted to set up clusters directly on cloud computing platforms without using an intermediary tool like Databricks. We decided on AWS at it seemed to be the most popular and supported platform available.</p>
+
+<p>The idea to use Jupyter Notebook with PySpark was due to my own affinity for Jupyter and python. I prefer to use Jupyter Notebook for data science as it allows users to interact quickly with their models and try many different approaches efficiently, which is important when starting out. Jupyter functionality also nicely embeds images for data visualization, something which is absolutely essential when working with data. I also really enjoyed using the notebook interface in Databricks when I was learning Spark. </p>
+
+<h2>
+<a id="getting-started-with-aws" class="anchor" href="#getting-started-with-aws" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Getting Started with AWS</h2>
+
+<p>AWS, short for <a href="https://aws.amazon.com/">Amazon Web Services</a>, is a popular cloud computing services. You will have to sign up for an account and have your credit card handy. AWS does have a 1-year 'free' tier plan, which I am currently on, but it covers very limited services and I easily supercede the allotted amount and pay out of my own pocket. It is easy to rack up serious charges if you're not careful. This tutorial will use the cloud computing service EC2 and the cloud storage service S3. Try running a test cluster from AWS EC2 interface and uploading files onto a S3 bucket if you are not familiar with AWS.</p>
+
+<p>For the following tutorial, you will need:</p>
+
+<ul>
+<li>
+<a href="http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html">Amazon EC2 Key Pair</a> to log into your instances</li>
+<li>
+<a href="http://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSGettingStartedGuide/AWSCredentials.html">Amazon Access Key ID and Secret Access Key</a> to use many programmatic features of AWS, such as integration of S3 in spark, and the AWS CLI. </li>
+</ul>
+
+<h2>
+<a id="why-flintrock" class="anchor" href="#why-flintrock" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Why Flintrock</h2>
+
+<p>There are many ways to set up spark with AWS EC2 instances, including:</p>
+
+<ul>
+<li>Manual Set-up</li>
+<li>
+<a href="https://github.com/amplab/spark-ec2">spark-ec2</a> tool</li>
+<li><a href="https://aws.amazon.com/emr/">Amazon EMR</a></li>
+<li><a href="https://github.com/nchammas/flintrock"><strong>Flintrock</strong></a></li>
+</ul>
+
+<p>One could do it manually, by starting instances first and linking the workers to the master. However, this is tedious and difficult to scale. I have used the spark-ec2 tool and although it gets the job done, the tool is not easy to use. It has slow launches for large clusters, clumsy command line integration without config file support, unresizable clusters and many other shortcomings. Flintrock, created by Nicholas Chammas, is the answer to spark-ec2's deficiencies. Like spark-ec2, it is also a command-line tool for launching Apache Spark clusters except it is easier to use and has more features. You can install it at the link above. The tutorial uses Flintrock 0.6.0.</p>
+
+<p>Amazon EMR (Elastic MapReduce) is another option that I have not explored in depth. It seems like a solid service offered by Amazon to run and scale Hadoop/Spark and other Big Data frameworks. However, there is an <a href="https://aws.amazon.com/emr/pricing/">Amazon EMR cost</a> in addition to the cost of the EC2 instances, which made me want to try to setup my own spark clusters using third-party tools.</p>
+
+<h2>
+<a id="using-flintrock" class="anchor" href="#using-flintrock" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Using Flintrock</h2>
+
+<p>After installation, read the README in the flintrock github page and try to run a couple of test clusters. After doing so, there are important modifications to make to the configuration file in flintrock. </p>
+
+<p>We generally try to use the latest spark version (2.0.2 at the time of this tutorial) to harness the full capabilities of spark. However, there is a known issue with the incompatability of Hadoop 2.6 (and 2.7 as I attempted) with S3 (<a href="https://issues.apache.org/jira/browse/SPARK-7442">SPARK-7442</a>), and you will get an error when trying to use S3 in the spark interface. To fix this, we simply use Hadoop 2.4 and a Spark version built against Hadoop 2.4 available <a href="https://spark.apache.org/downloads.html">here</a>, for which S3 I/O works. You should specify this in the configuration file as follows:</p>
+
+<div class="highlight highlight-source-yaml"><pre><span class="pl-ent">services:</span>
+  <span class="pl-ent">spark:</span>
+    <span class="pl-ent">version:</span> <span class="pl-s">2.0.2</span>
+    <span class="pl-c"># git-commit: latest  # if not 'latest', provide a full commit SHA; e.g. d6dc12ef0146ae409834c78737c116050961f350</span>
+    <span class="pl-c"># git-repository:  # optional; defaults to https://github.com/apache/spark</span>
+    <span class="pl-c"># optional; defaults to download from from the official Spark S3 bucket</span>
+    <span class="pl-c">#   - must contain a {v} template corresponding to the version</span>
+    <span class="pl-c">#   - Spark must be pre-built</span>
+    <span class="pl-c">#   - must be a tar.gz file</span>
+    <span class="pl-ent">download-source:</span> <span class="pl-s"><span class="pl-pds">"</span>http://d3kbcqa49mib13.cloudfront.net/spark-2.0.2-bin-hadoop2.4.tgz<span class="pl-pds">"</span></span>
+
+  <span class="pl-ent">hdfs:</span>
+    <span class="pl-ent">version:</span> <span class="pl-c1">2.4</span> <span class="pl-c">#2.7.2</span>
+    <span class="pl-c"># optional; defaults to download from a dynamically selected Apache mirror</span>
+    <span class="pl-c">#   - must contain a {v} template corresponding to the version</span>
+    <span class="pl-c">#   - must be a .tar.gz file</span>
+    <span class="pl-c"># download-source: "https://www.example.com/files/hadoop/{v}/hadoop-{v}.tar.gz"</span></pre></div>
+
+<p>All other parameters are up to you. I recommend using HVM AMI's as they have better support than PVM AMI's on EC2. I also recommend using t2.micro instances when trying to figure out all this setup as they are covered in the free-tier.</p>
+
+<p>When finished, simply launch and log into your cluster through the flintrock command line interface. I launch a custom AMI built from the Amazon Linux AMI.</p>
+
+<h2>
+<a id="installing-anacondajupyter" class="anchor" href="#installing-anacondajupyter" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Installing Anaconda/Jupyter</h2>
+
+<p>Installing Jupyter Notebook and its dependencies can be easily achieved by installing the Anaconda Python distribution. This will also include many important libraries such as numpy, scipy, matplotlib, pandas, etc. You can visit the installation page <a href="https://www.continuum.io/downloads#">here</a>. I download and install the Anaconda 4.2.0 Python 2.7 version while logged into my Spark master with the following commands: </p>
+
+<pre><code>[SparkMasterPublicDNS] wget https://repo.continuum.io/archive/Anaconda2-4.2.0-Linux-x86_64.sh
+[SparkMasterPublicDNS] sh Anaconda2-4.2.0-Linux-x86_64.sh
+</code></pre>
+
+<p>After installation, make sure you set your path to Anaconda properly as follows:</p>
+
+<pre><code>[SparkMasterPublicDNS]
+</code></pre>
+
+<p>Better yet, place this in your .bashrc file, and save the AMI (detailed in a later section). Next time you may launch clusters using your saved custom AMI through flintrock and your Anaconda path will be automatically set. </p>
+
+<h2>
+<a id="running" class="anchor" href="#running" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Running</h2>
+
+<h2>
+<a id="s3-inputoutput" class="anchor" href="#s3-inputoutput" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>S3 Input/Output</h2>
+
+<h2>
+<a id="using-your-own-ami" class="anchor" href="#using-your-own-ami" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Using your own AMI</h2>
+
+<p>You wouldn't want to download and install Anaconda everytime. </p>
+
+<h2>
+<a id="next-steps" class="anchor" href="#next-steps" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Next Steps</h2>
+
+<p>The following are tasks that I am currently trying to figure out. They are not crucial but nice-to-have.</p>
+
+<ul>
+<li>How to read zip csv files from S3 as Spark DF or RDD without too much hassle</li>
+<li>How to shrink EBS volume size launches, EBS costs are greatly outweighing spot-requested EC2 instances cost</li>
+</ul>
+
+<h2>
+<a id="acknowledgements" class="anchor" href="#acknowledgements" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Acknowledgements</h2>
+
+<p>Many thanks to <a href="github.com/c4goldsw">Chris Goldsworthy</a> for his help. </p>
+
+<h2>
+<a id="sources" class="anchor" href="#sources" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Sources</h2>
+
+<ul>
+<li><a href="http://blog.insightdatalabs.com/jupyter-on-apache-spark-step-by-step/">http://blog.insightdatalabs.com/jupyter-on-apache-spark-step-by-step/</a></li>
+</ul>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Spark-jupyter-aws maintained by <a href="https://github.com/PiercingDan">PiercingDan</a></p>
+        <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
