@@ -163,6 +163,15 @@ The following are tasks that I am currently trying to figure out. They are not c
 * How to read zip csv files from S3 as Spark DF or RDD without too much hassle
 * How to shrink EBS volume size launches, EBS costs are greatly outweighing spot-requested EC2 instances cost
 
+## Conclusion
+Thanks for reading this guide! If this guide helped you, please give it a star on github. 
+
+## About Me
+I am currently a student in Math & Physics at the University of Toronto, with a deep interest in data science, machine learning and big data. 
+
+* [linkedin](https://www.linkedin.com/in/danny-luo-277a93b8)
+* [github](https://github.com/PiercingDan)
+
 ## Acknowledgements
 Many thanks to [Chris Goldsworthy](https://github.com/c4goldsw) for his help. 
 
