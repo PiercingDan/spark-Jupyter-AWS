@@ -51,27 +51,82 @@ services:
     #   - must be a .tar.gz file
     # download-source: "https://www.example.com/files/hadoop/{v}/hadoop-{v}.tar.gz"
 ```
-All other parameters are up to you. I recommend using HVM AMI's as they have better support than PVM AMI's on EC2. I also recommend using t2.micro instances when trying to figure out all this setup as they are covered in the free-tier.
+All other parameters are up to you. I recommend using HVM AMI's rather than PVM AMI's as all instances on EC2 support HVM but not PVM. I also recommend using t2.micro instances when trying to figure out all this setup as they are covered in the free-tier.
 
-When finished, simply launch and log into your cluster through the flintrock command line interface. I launch a custom AMI built from the Amazon Linux AMI.
+When finished, simply launch and log into your cluster through the flintrock command line interface. I launch a custom AMI built from the Amazon Linux AMI. To begin, you may simply launch the default Amazon Linux AMI.
 
 ## Installing Anaconda/Jupyter
 Installing Jupyter Notebook and its dependencies can be easily achieved by installing the Anaconda Python distribution. This will also include many important libraries such as numpy, scipy, matplotlib, pandas, etc. You can visit the installation page [here](https://www.continuum.io/downloads#). I download and install the Anaconda 4.2.0 Python 2.7 version while logged into my Spark master with the following commands: 
 
 ```
-[SparkMasterPublicDNS] wget https://repo.continuum.io/archive/Anaconda2-4.2.0-Linux-x86_64.sh
-[SparkMasterPublicDNS] sh Anaconda2-4.2.0-Linux-x86_64.sh
+[SparkMaster] wget https://repo.continuum.io/archive/Anaconda2-4.2.0-Linux-x86_64.sh
+[SparkMaster] sh Anaconda2-4.2.0-Linux-x86_64.sh
 ```
 
 After installation, make sure you set your path to Anaconda properly as follows:
 ```
-[SparkMasterPublicDNS]
+[SparkMaster] export PATH=/home/user/path/to/anaconda2/bin:$PATH
 ```
 Better yet, place this in your .bashrc file, and save the AMI (detailed in a later section). Next time you may launch clusters using your saved custom AMI through flintrock and your Anaconda path will be automatically set. 
 
-## Running
+Try running Jupyter notebook as a quick test.
+```
+[SparkMaster] jupyter notebook
+```
+Press Ctrl-C to exit.
+
+## Using tmux (Optional)
+You may have noticed in the previous command, or know from previous uses, that running jupyter notebook will hinder you from running any more commands. A simple workaround would be to open up another terminal and login a second time, but, in my experience, after doing this many times, it can get tiring. I prefer to use `tmux`, a useful tool that allows you split up your terminal. You can install it from the terminal, for example, on Amazon Linux, run:
+```
+[SparkMaster] sudo yum update
+[SparkMaster] sudo yum install tmux
+```
+If you're running Ubuntu or a similar OS, replace `yum` with `apt-get`. 
+
+Then, launch tmux with the command:
+```
+[SparkMaster] tmux new
+```
+You can familiarize yourself with the tmux commands [here](https://gist.github.com/MohamedAlaa/2961058).
+
+## Launching Jupyter with PySpark
+First, add the following lines in our `.bashrc` file at the end of the file.
+```shell
+#Amazon Keys
+export AWS_ACCESS_KEY_ID=XXXXXXXXXXXXXXXXXXX
+export AWS_SECRET_ACCESS_KEY=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+# User specific aliases and functions
+export PYTHONPATH=$SPARK_HOME/python:$SPARK_HOME/python/lib/py4j-0.10.1-src.zip:$PYTHONPATH
+
+# added by Anaconda2 4.2.0 installer
+export PATH='/home/user/path/to/anaconda2/bin:$PATH'
+```
+The environment variables `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` will allow you to access your S3 buckets in Spark. The rest of the commands set up necessary paths. Save your `.bashrc` file and source it.
+
+Now, we are going to run Jupyter with Pyspark. The following steps is modified from this [tutorial](http://blog.insightdatalabs.com/jupyter-on-apache-spark-step-by-step/). 
+
+I put the following commands in a shell script `jupyter_setup.sh`.
+
+```shell
+export spark_master_hostname=Spark Master Public DNS
+export memory=1000M 
+
+PYSPARK_DRIVER_PYTHON=jupyter PYSPARK_DRIVER_PYTHON_OPTS="notebook --no-browser --port=7777" pyspark --packages com.databricks:spark-csv_2.10:1.1.0 --master spark://$spark_master_hostname:7077 --executor-memory $memory --driver-memory $memory
+```
+
+You can find your Spark Master Public DNS on the AWS EC2 console. You can check how much memory there is available on your instances by going to *SparkMasterPublicDNS:/8080*. Note, flintrock's default security group should have the port 8080 open to your computer by default; if not, then you can change it on the EC2 console. 
+
+Source `jupyter_setup.sh`. By default, jupyter should run on port 7777. Then, to access the notebook on your browser, we port forward on your local computer:
+```
+[LocalComputer] ssh -i ~/path/to/AWSkeypair.pem -N -f -L localhost:7776:localhost:7777 ec2-user@SparkMasterPublicDNS
+```
+The default user in flintrock is `ec2-user` so that will work most of the time. I've found, annoyingly, that ubuntu instances will require `ubuntu@SparkMasterPublicDNS` instaed.
+
+Alternatively, you can 
 
 ## S3 Input/Output
+Delete spark
 
 ## Using your own AMI
 You wouldn't want to download and install Anaconda everytime. 
