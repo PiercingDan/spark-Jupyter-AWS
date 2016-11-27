@@ -1,7 +1,7 @@
 # Spark with Jupyter on AWS
 *By Danny Luo*
 
-A guide on how to set up Jupyter with Pyspark painlessly on AWS EC2 instances using the tool [Flintrock](https://github.com/nchammas/flintrock), with S3 I/O support. This guide will be updated as I discover more things.
+A guide on how to set up Jupyter with Pyspark painlessly on AWS EC2 instances using the tool [Flintrock](https://github.com/nchammas/flintrock), with S3 I/O support.
 
 ## Introduction
 This guide was motivated by my involvement in the University of Toronto Data Science Team. The team recently undertook the Kaggle Competition: [Outbrain Click Prediction](https://www.kaggle.com/c/outbrain-click-prediction), in which one of the datasets was a large 88GB unzipped csv detailing the page views of users. To attempt to do any type of analysis with this particular dataset, it was obvious that we had use more powerful machines. My fellow big data enthuasiast and good friend, [Chris Goldsworthy](github.com/c4goldsw), suggested the idea of using Apache Spark, a fast big data parallel processing engine, to analyze this huge dataset. Chris and I had learned Spark on Databricks in preparation for Toronto's newest data hackathon [HackOn(Data)](http://hackondata.com/), at which we placed third for our project-[Optimal Digital Map Placement in Toronto](https://github.com/c4goldsw/billboardPlacementTO). We decided that we wanted to showcase to the rest of our Data Science Team the power of distributed computing to effortlessly crunch large datasets. We also wanted to set up clusters directly on cloud computing platforms without using an intermediary tool like Databricks. We decided on AWS at it seemed to be the most popular and supported platform available.
@@ -115,9 +115,9 @@ export memory=1000M
 PYSPARK_DRIVER_PYTHON=jupyter PYSPARK_DRIVER_PYTHON_OPTS="notebook --no-browser --port=7777" pyspark --packages com.databricks:spark-csv_2.10:1.1.0 --master spark://$spark_master_hostname:7077 --executor-memory $memory --driver-memory $memory
 ```
 
-You can find your Spark Master Public DNS on the AWS EC2 console. You can check how much memory there is available on your instances by going to *SparkMasterPublicDNS:/8080*. Note, flintrock's default security group should have the port 8080 open to your computer by default; if not, then you can change it on the EC2 console. 
+You can find your Spark Master Public DNS on the AWS EC2 console. You can check how much memory there is available on your instances by going to *SparkMasterPublicDNS:/8080* in your browser. Note, flintrock's default security group should have the port 8080 open to your computer by default; if not, then you can change it manually on the EC2 console. 
 
-Source `jupyter_setup.sh`. By default, jupyter should run on port 7777. Then, to access the notebook on your browser, we port forward on your local computer:
+Source `jupyter_setup.sh`. By default, jupyter should run on port 7777. Then, to access the notebook on your browser, port forward on your local computer:
 ```
 [LocalComputer] ssh -i ~/path/to/AWSkeypair.pem -N -f -L localhost:7776:localhost:7777 ec2-user@SparkMasterPublicDNS
 ```
@@ -128,17 +128,31 @@ Alternatively, you can configure your security group to allow your local compute
 Now, go to your browser and type in *localhost:7776*. You should see the jupyter interface displaying the contents of the directory of your Spark Master in which you ran `jupyter_setup.sh`.
 
 ## Running Tests
-Now, you can run some basic tests on jupyter to make sure everything is set up correctly. While you do so, you can observe your progress on *SparkMasterPublicDNS:/8080* and *SparkMasterPublicDNS:/4040*. 
+Now, you can run some basic tests on jupyter to make sure everything is set up correctly. While you do so, you can observe your progress on *SparkMasterPublicDNS:/8080* and *SparkMasterPublicDNS:/4040* UI's. 
 
-Create a new notebook in jupyter. SparkContext should already be set up for you. Begin with the following test command:
+You can download the `Spark_Test.ipynb` notebook from my [repository](https://github.com/PiercingDan/spark-Jupyter-AWS). You may download this locally and then upload it onto your Spark Master through the Jupyter web interface or directly download it from github onto your Spark Master. 
 
+In addition, you will need to upload the test dataset `iris_data.csv` onto your S3 bucket. While you can do this through the S3 interface on AWS console, it is a worthwhile exercise to use the AWS CLI to perform this task. Download dataset on your Spark Master. Begin by setting up your AWS configurations:
 ```
-In []:sc
-Out []:<pyspark.context.SparkContext at 0x7f4e436f3990>
+[SparkMaster] aws configure
 ```
-
-## S3 Input/Output
-Delete spark
+Download the Iris csv onto your Spark Master:
+```
+[SparkMaster] wget https://raw.githubusercontent.com/PiercingDan/spark-Jupyter-AWS/master/iris_data.csv
+```
+Upload it onto your S3 bucket (assuming you've already created one):
+```
+[SparkMaster] aws s3 cp iris_data.csv s3://BucketName/
+[SparkMaster] aws s3 ls s3://BucketName
+```
+The AWS command line interface is a terrific tool, and it comes installed with all EC2 Instances. I use AWS CLI to quickly set up my code when logging onto a new Spark EC2 instance by running:
+```
+[SparkMaster] aws s3 sync s3://DannysBucket/code $HOME/code
+```
+When I'm finished working and ready to terminate by instances, I run the opposite sync:
+```
+[SparkMaster] aws s3 sync $HOME/code s3://dluo96/code
+```
 
 ## Using your own AMI
 You wouldn't want to download and install Anaconda everytime. 
