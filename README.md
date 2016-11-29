@@ -14,11 +14,11 @@ This guide was motivated by my involvement in the University of Toronto Data Sci
 The idea to use Jupyter Notebook with PySpark was due to my own affinity for Jupyter and python. Jupyter Notebook is highly effective for data science as it allows users to interact quickly with their models and try many different approaches quickly, which is essential for data analysis. Jupyter functionality also nicely embeds images for data visualization and together with the numerous python libraries available, there is no end to the things you can do.
 
 ## Getting Started with AWS
-AWS, short for [Amazon Web Services](https://aws.amazon.com/), is a popular cloud computing service. You will have to sign up for an account and have your credit card handy. AWS does have a 1-year 'free' tier plan, which I am currently on, but it covers very limited services and I easily supercede the allotted amount and pay out of my own pocket. It is easy to rack up serious charges if you're not careful. This tutorial will use the cloud computing service EC2 and the cloud storage service S3. Try running a test cluster from AWS EC2 interface and uploading files onto a S3 bucket if you are not familiar with AWS.
+AWS, short for [Amazon Web Services](https://aws.amazon.com/), is a popular cloud computing service. You will have to sign up for an account and have your credit card on hand. AWS does have a 1-year 'free' tier plan, which I am currently on, but it covers very limited services and I easily supercede the allotted amount and pay out of my own pocket. It is easy to rack up serious charges if you're not careful. This tutorial will use the cloud computing service EC2 and the cloud storage service S3. Try running a test cluster from AWS EC2 interface and uploading files onto a S3 bucket if you are not familiar with AWS.
 
 For the following tutorial, you will need:
 * [Amazon EC2 Key Pair](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html) to log into your instances
-* [Amazon Access Key ID and Secret Access Key](http://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSGettingStartedGuide/AWSCredentials.html) to use many programmatic features of AWS, such as integration of S3 in spark, and the AWS CLI. 
+* [Amazon Access Key ID and Secret Access Key](http://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSGettingStartedGuide/AWSCredentials.html) to use many programmatic features of AWS, such as integration of S3 in spark, and the AWS CLI
 
 ## Why Flintrock
 There are many ways to set up spark with AWS EC2 instances, including:
@@ -27,9 +27,9 @@ There are many ways to set up spark with AWS EC2 instances, including:
 * [Amazon EMR](https://aws.amazon.com/emr/)
 * [**Flintrock**](https://github.com/nchammas/flintrock)
 
-One could do it manually, by starting instances first and linking the workers to the master. However, this is tedious and difficult to scale. I have used the spark-ec2 tool and although it gets the job done, the tool is not easy to use. It has slow launches for large clusters, clumsy command line integration without config file support, unresizable clusters and many other shortcomings. Flintrock, created by Nicholas Chammas, is the answer to spark-ec2's deficiencies. Like spark-ec2, it is also a command-line tool for launching Apache Spark clusters except it is easier to use and has more features. You can install it at the link above. The tutorial uses Flintrock 0.6.0.
+One could start EC2 instances and manually link the workers to the master. However, this is tedious and difficult to scale. I have used the spark-ec2 tool and although it gets the job done, the tool is not easy to use. It has slow launches for large clusters, clumsy command line integration without config file support, unresizable clusters and many other shortcomings. Flintrock, created by Nicholas Chammas, is the answer to spark-ec2's deficiencies. Like spark-ec2, it is also a command-line tool for launching Apache Spark clusters except it is easier to use and has more features. You can install it at the link above. This tutorial uses Flintrock 0.6.0.
 
-Amazon EMR (Elastic MapReduce) is another option that I have not explored in depth. It seems like a solid service offered by Amazon to run and scale Hadoop/Spark and other Big Data frameworks. However, there is an [Amazon EMR cost](https://aws.amazon.com/emr/pricing/) in addition to the cost of the EC2 instances, which made me want to try to setup my own spark clusters using third-party tools.
+Amazon EMR (Elastic MapReduce) is another option that I have not explored in depth. It seems like a solid service offered by Amazon to run and scale Hadoop/Spark and other Big Data frameworks. However, there is an [Amazon EMR cost](https://aws.amazon.com/emr/pricing/) in addition to the cost of the EC2 instances, which made me want to try to setup my own spark clusters using third-party tools at no extra expense.
 
 ## Using Flintrock
 
@@ -56,7 +56,7 @@ services:
     #   - must be a .tar.gz file
     # download-source: "https://www.example.com/files/hadoop/{v}/hadoop-{v}.tar.gz"
 ```
-All other parameters are up to you. I recommend using HVM AMI's rather than PVM AMI's as all instances on EC2 support HVM but not PVM. I also recommend using t2.micro instances when trying to figure out all this setup as they are covered in the free-tier.
+All other parameters are up to you. I recommend using HVM AMI's rather than PVM AMI's as all instances on EC2 support HVM but not PVM. I also recommend using t2.micro instances to practice the setup as they are covered in the free-tier. 
 
 When finished, simply launch and log into your cluster through the flintrock command line interface. I launch a custom AMI built from the Amazon Linux AMI. To begin, you may simply launch the default Amazon Linux AMI.
 
@@ -81,7 +81,7 @@ Try running Jupyter notebook as a quick test.
 Press Ctrl-C to exit.
 
 ## Using tmux (Optional)
-You may have noticed in the previous command, or know from previous uses, that running jupyter notebook will hinder you from running any more commands. A simple workaround would be to open up another terminal and login a second time, but, in my experience, after doing this many times, it can get tiring. I prefer to use `tmux`, a useful tool that allows you split up your terminal. You can install it from the terminal, for example, on Amazon Linux, run:
+You may have noticed in the previous command, or know from previous uses, that running jupyter notebook will hinder you from running any more commands in the same terminal. A simple workaround would be to open up another terminal and login a second time, but this can get tedious. I prefer to use `tmux`, a useful tool that allows you split up your terminal. You can install it from the terminal, for example, on Amazon Linux, run:
 ```
 [SparkMaster] sudo yum update
 [SparkMaster] sudo yum install tmux
@@ -107,7 +107,7 @@ export PYTHONPATH=$SPARK_HOME/python:$SPARK_HOME/python/lib/py4j-0.10.1-src.zip:
 # added by Anaconda2 4.2.0 installer
 export PATH='/home/user/path/to/anaconda2/bin:$PATH'
 ```
-The environment variables `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` will allow you to access your S3 buckets in Spark. The rest of the commands set up necessary paths. Save your `.bashrc` file and source it.
+The environment variables `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` will allow you to access your S3 buckets in spark. The rest of the commands set up necessary paths. Save your `.bashrc` file and source it.
 
 Now, we are going to run Jupyter with Pyspark. The following steps are modified from this [tutorial](http://blog.insightdatalabs.com/jupyter-on-apache-spark-step-by-step/). 
 
@@ -126,18 +126,18 @@ Source `jupyter_setup.sh`. By default, jupyter should run on port 7777. Then, to
 ```
 [LocalComputer] ssh -i ~/path/to/AWSkeypair.pem -N -f -L localhost:7776:localhost:7777 ec2-user@SparkMasterPublicDNS
 ```
-The default user in flintrock is `ec2-user` so that will work most of the time. I've found, annoyingly, that ubuntu instances will require `ubuntu@SparkMasterPublicDNS` instead.
+The default user in flintrock is `ec2-user` so that will work most of the time. I have found, annoyingly, that ubuntu instances will require `ubuntu@SparkMasterPublicDNS` instead.
 
 Alternatively, you can configure your security group to allow your local computer to access the port directly. 
 
 Now, go to your browser and type in *localhost:7776*. You should see the jupyter interface displaying the contents of the directory of your Spark Master in which you ran `jupyter_setup.sh`.
 
 ## Running Test
-Now, you can run some basic tests on jupyter to make sure everything is set up correctly. While you do so, you can observe your progress on *SparkMasterPublicDNS:/8080* and *SparkMasterPublicDNS:/4040* UI's. 
+Now, you can run some basic tests on jupyter to make sure everything is set up correctly. While you do so, you can observe your progress on built-in user interfaces at *SparkMasterPublicDNS:/8080* and *SparkMasterPublicDNS:/4040*. 
 
 I have created a Jupyter notebook called `Spark_Test.ipynb` located in this [repository](https://github.com/PiercingDan/spark-Jupyter-AWS), which contains basic tests for Spark with S3 I/O. You may download this locally and then upload it onto your Spark Master through the Jupyter browser interface or directly download it from github onto your Spark Master. 
 
-In addition, you will need to upload the test dataset `iris_data.csv` onto your S3 bucket. While you can do this through the S3 interface on AWS console, it is a worthwhile exercise to use the AWS CLI to perform this task. Download dataset on your Spark Master. Begin by setting up your AWS configurations:
+In addition, you will need to upload the test dataset `iris_data.csv` onto your S3 bucket. While you can do this through the S3 interface on AWS console, it is a worthwhile exercise to use the AWS CLI to perform this task. Download dataset on your Spark Master or your local computer with AWS CLI installed. Begin by setting up your AWS configurations:
 ```
 [SparkMaster] aws configure
 ```
@@ -152,15 +152,15 @@ Upload it onto your S3 bucket (assuming you've already created one):
 ```
 The AWS command line interface is a terrific tool, and it comes installed with all EC2 Instances. I use AWS CLI to quickly set up my code when logging onto a new Spark EC2 instance by running:
 ```
-[SparkMaster] aws s3 sync s3://DannysBucket/code $HOME/code
+[SparkMaster] aws s3 sync s3://BucketName/code $HOME/code
 ```
 When I'm finished working and ready to terminate by instances, I run the opposite sync to save my work to S3:
 ```
-[SparkMaster] aws s3 sync $HOME/code s3://DannysBucket/code
+[SparkMaster] aws s3 sync $HOME/code s3://BucketName/code
 ```
 
 ## Using your own AMI
-You wouldn't want to download and install Anaconda everytime you use spark, and you definitely want to terminate your instances after you're finished using them for cost reasons. The solution here is to save the AMI after running through this tutorial once, so, the next time you launch a Spark cluster through flintrock, you already have existing environment set up, i.e. Anaconda installed, AWS credentials set up, etc.
+You wouldn't want to download and install Anaconda everytime you use spark, and you definitely want to terminate your instances after you're finished using them for cost reasons. The solution here is to save the AMI after running through this tutorial once, so the next time you launch a Spark cluster through flintrock, you already have existing environment set up, i.e. Anaconda installed, AWS credentials set up, etc.
 
 You can save your AMI using the AWS EC2 console. You can specify your custom AMI in the flintrock configuration file, a very useful feature of flintrock not available on spark-ec2. Note that it is important that since flintrock is designed to install and configure Spark every time, it is important that you delete the Spark folder and other files before saving your AMI or you will encounter errors with flintrock. 
 
@@ -204,3 +204,4 @@ Many thanks to [Chris Goldsworthy](https://github.com/c4goldsw) for his help.
 
 ## Sources
 * http://blog.insightdatalabs.com/jupyter-on-apache-spark-step-by-step/
+* https://github.com/nchammas/flintrock
