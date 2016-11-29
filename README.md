@@ -127,10 +127,10 @@ Alternatively, you can configure your security group to allow your local compute
 
 Now, go to your browser and type in *localhost:7776*. You should see the jupyter interface displaying the contents of the directory of your Spark Master in which you ran `jupyter_setup.sh`.
 
-## Running Tests
+## Running Test
 Now, you can run some basic tests on jupyter to make sure everything is set up correctly. While you do so, you can observe your progress on *SparkMasterPublicDNS:/8080* and *SparkMasterPublicDNS:/4040* UI's. 
 
-You can download the `Spark_Test.ipynb` notebook from my [repository](https://github.com/PiercingDan/spark-Jupyter-AWS). You may download this locally and then upload it onto your Spark Master through the Jupyter web interface or directly download it from github onto your Spark Master. 
+I have created a Jupyter notebook called `Spark_Test.ipynb` located in this [repository](https://github.com/PiercingDan/spark-Jupyter-AWS), which contains basic tests for Spark with S3 I/O. You may download this locally and then upload it onto your Spark Master through the Jupyter browser interface or directly download it from github onto your Spark Master. 
 
 In addition, you will need to upload the test dataset `iris_data.csv` onto your S3 bucket. While you can do this through the S3 interface on AWS console, it is a worthwhile exercise to use the AWS CLI to perform this task. Download dataset on your Spark Master. Begin by setting up your AWS configurations:
 ```
