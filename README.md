@@ -35,7 +35,7 @@ Amazon EMR (Elastic MapReduce) is another option that I have not explored in dep
 
 After installation, read the README in the flintrock github page and try to run a couple of test clusters. After doing so, there are important modifications to make to the configuration file in flintrock. 
 
-We generally try to use the latest spark version (2.0.2 at the time of this tutorial) to harness the full capabilities of spark. However, there is a known issue with the incompatability of Hadoop 2.6 (and 2.7 as I attempted) with S3 ([SPARK-7442](https://issues.apache.org/jira/browse/SPARK-7442)), and you will get an error when trying to use S3 in the spark interface. To fix this, we simply use Hadoop 2.4 and a Spark version built against Hadoop 2.4 available [here](https://spark.apache.org/downloads.html), for which S3 I/O works. You should specify this in the configuration file as follows:
+I will use use the latest spark version (2.0.2 at the time of this tutorial) to harness the full capabilities of spark. However, there is a known issue with the incompatability of Hadoop 2.6/2.7 with S3 ([SPARK-7442](https://issues.apache.org/jira/browse/SPARK-7442)), and you will get an error when trying to use S3 in the spark interface. To fix this, we simply use Hadoop 2.4 and a Spark version built against Hadoop 2.4 available [here](https://spark.apache.org/downloads.html), for which S3 I/O works. You should specify this in the configuration file as follows:
 
 ```yaml
 services:
@@ -114,7 +114,7 @@ Now, we are going to run Jupyter with Pyspark. The following steps are modified 
 I put the following commands in a shell script `jupyter_setup.sh`.
 
 ```shell
-export spark_master_hostname=Spark Master Public DNS
+export spark_master_hostname=SparkMasterPublicDNS
 export memory=1000M 
 
 PYSPARK_DRIVER_PYTHON=jupyter PYSPARK_DRIVER_PYTHON_OPTS="notebook --no-browser --port=7777" pyspark --master spark://$spark_master_hostname:7077 --executor-memory $memory --driver-memory $memory
