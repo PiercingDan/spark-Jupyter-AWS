@@ -96,7 +96,7 @@ First, add the following lines in our `.bashrc` file at the end of the file.
 export AWS_ACCESS_KEY_ID=XXXXXXXXXXXXXXXXXXX
 export AWS_SECRET_ACCESS_KEY=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
-# User specific aliases and functions
+# User specific aliases and functions #Note that your py4j Version may vary!
 export PYTHONPATH=$SPARK_HOME/python:$SPARK_HOME/python/lib/py4j-0.10.1-src.zip:$PYTHONPATH
 
 # added by Anaconda2 4.2.0 installer
@@ -155,7 +155,29 @@ When I'm finished working and ready to terminate by instances, I run the opposit
 ```
 
 ## Using your own AMI
-You wouldn't want to download and install Anaconda everytime. 
+You wouldn't want to download and install Anaconda everytime you use spark, and you definitely want to terminate your instances after you're finished using them for cost reasons. The solution here is to save the AMI after running through this tutorial once, so, the next time you launch a Spark cluster through flintrock, you already have existing environment set up, i.e. Anaconda installed, AWS credentials set up, etc.
+
+You can save your AMI using the AWS EC2 console. You can specify your custom AMI in the flintrock configuration file, a very useful feature of flintrock not available on spark-ec2. Note that it is important that since flintrock is designed to install and configure Spark every time, it is important that you delete the Spark folder and other files before saving your AMI or you will encounter errors with flintrock. 
+
+Here's a useful script `clean.sh` to remove all conflicts with the flintrock setup (thanks to Chris).
+
+```shell
+# A script that can be used to clean an AMI to avoid
+# issues when Flintrock tries to launch a cluster from
+# this AMI.  This should be executed before creating
+# an AMI of this machine.
+
+#remove id_rsa
+cd $HOME/.ssh
+rm -f ./id_rsa
+
+#remove anything related to spark
+cd $HOME
+rm -rf spark
+
+cd /usr/local/bin
+rm -f *
+```
 
 ## Next Steps
 The following are tasks that I am currently trying to figure out. They are not crucial but nice-to-have.
