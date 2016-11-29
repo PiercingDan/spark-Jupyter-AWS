@@ -1,10 +1,11 @@
 # Spark with Jupyter on AWS
 *By Danny Luo*
+A guide on how to set up Jupyter with Pyspark painlessly on AWS EC2 instances using the tool [Flintrock](https://github.com/nchammas/flintrock), with S3 I/O support.
+
 <img src="images/apachespark.jpg" alt="Drawing" width="250"/>
 <img src="images/jupyter.png" alt="Drawing" width="250"/>
 <img src="images/aws.png" alt="Drawing" width="250"/>
 
-A guide on how to set up Jupyter with Pyspark painlessly on AWS EC2 instances using the tool [Flintrock](https://github.com/nchammas/flintrock), with S3 I/O support.
 
 ## Introduction
 This guide was motivated by my involvement in the University of Toronto Data Science Team. The team recently undertook the Kaggle Competition: [Outbrain Click Prediction](https://www.kaggle.com/c/outbrain-click-prediction), in which one of the datasets was a large 88GB unzipped csv detailing the page views of users. To attempt to do any type of analysis with this particular dataset, it was obvious that we had use more powerful machines. My fellow big data enthuasiast and good friend, [Chris Goldsworthy](github.com/c4goldsw), suggested the idea of using Apache Spark, a fast big data parallel processing engine, to analyze this huge dataset. Chris and I had learned Spark on Databricks in preparation for Toronto's newest data hackathon [HackOn(Data)](http://hackondata.com/), at which we placed third for our project-[Optimal Digital Map Placement in Toronto](https://github.com/c4goldsw/billboardPlacementTO). We decided that we wanted to showcase to the rest of our Data Science Team the power of distributed computing to effortlessly crunch large datasets. We also wanted to set up clusters directly on cloud computing platforms without using an intermediary tool like Databricks. We decided on AWS at it seemed to be the most popular and supported platform available.
