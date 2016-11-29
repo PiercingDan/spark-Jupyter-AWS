@@ -112,10 +112,10 @@ I put the following commands in a shell script `jupyter_setup.sh`.
 export spark_master_hostname=Spark Master Public DNS
 export memory=1000M 
 
-PYSPARK_DRIVER_PYTHON=jupyter PYSPARK_DRIVER_PYTHON_OPTS="notebook --no-browser --port=7777" pyspark --packages com.databricks:spark-csv_2.10:1.1.0 --master spark://$spark_master_hostname:7077 --executor-memory $memory --driver-memory $memory
+PYSPARK_DRIVER_PYTHON=jupyter PYSPARK_DRIVER_PYTHON_OPTS="notebook --no-browser --port=7777" pyspark --master spark://$spark_master_hostname:7077 --executor-memory $memory --driver-memory $memory
 ```
 
-You can find your Spark Master Public DNS on the AWS EC2 console. You can check how much memory there is available on your instances by going to *SparkMasterPublicDNS:/8080* in your browser. Note, flintrock's default security group should have the port 8080 open to your computer by default; if not, then you can change it manually on the EC2 console. 
+You can find your Spark Master Public DNS on the AWS EC2 console. Note that each time you start a cluster, the Public DNS will be different, therefore you will need to alter it with the right DNS. To set the proper amoutn of memory, you can check how much memory there is available on your instances by going to *SparkMasterPublicDNS:/8080* in your browser. Note that flintrock's default security group should have the port 8080 open to your computer by default; if not, then you can change it manually on the EC2 console. 
 
 Source `jupyter_setup.sh`. By default, jupyter should run on port 7777. Then, to access the notebook on your browser, port forward on your local computer:
 ```
