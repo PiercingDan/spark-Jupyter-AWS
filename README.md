@@ -1,7 +1,7 @@
 # Spark with Jupyter on AWS
 *By [Danny Luo](https://www.linkedin.com/in/danny-luo-277a93b8)*
 
-A guide on how to set up Jupyter with Pyspark painlessly on AWS EC2 instances using the tool [Flintrock](https://github.com/nchammas/flintrock), with S3 I/O support.
+A guide on how to set up Jupyter with Pyspark painlessly on AWS EC2 instances using the tool [Flintrock](https://github.com/nchammas/flintrock), with S3 I/O support. 
 
 <img src="images/apachespark.jpg" alt="Drawing" width="280"/>
 <img src="images/jupyter.png" alt="Drawing" width="280"/>
@@ -191,7 +191,7 @@ The following are tasks that I am currently trying to figure out. They are not c
 * How to shrink EBS volume size launches, EBS costs are greatly outweighing spot-requested EC2 instances cost
 
 ## Conclusion
-Thanks for reading this guide! If this guide helped you, please give it a star on github. 
+Thanks for reading this guide! If this guide helped you, please give it a star on github. If you have any problems, create an issue.
 
 ## About Me
 I am currently a student in Math & Physics at the University of Toronto, with a deep interest in data science, machine learning and big data. 
