@@ -19,6 +19,7 @@ AWS, short for [Amazon Web Services](https://aws.amazon.com/), is a popular clou
 For the following tutorial, you will need:
 * [Amazon EC2 Key Pair](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html) to log into your instances
 * [Amazon Access Key ID and Secret Access Key](http://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSGettingStartedGuide/AWSCredentials.html) to use many programmatic features of AWS, such as integration of S3 in spark, and the AWS CLI
+* Local Unix Environment
 
 ## Why Flintrock
 There are many ways to set up spark with AWS EC2 instances, including:
