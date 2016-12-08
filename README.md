@@ -133,7 +133,7 @@ Alternatively, you can configure your security group to allow your local compute
 
 Now, go to your browser and type in *localhost:7776*. You should see the jupyter interface displaying the contents of the directory of your Spark Master in which you ran `jupyter_setup.sh`.
 
-## Running Test
+## Running Tests
 Now, you can run some basic tests on jupyter to make sure everything is set up correctly. While you do so, you can observe your progress on built-in user interfaces at *SparkMasterPublicDNS:/8080* and *SparkMasterPublicDNS:/4040*. 
 
 I have created a Jupyter notebook called `Spark_Test.ipynb` located in this [repository](https://github.com/PiercingDan/spark-Jupyter-AWS), which contains basic tests for Spark with S3 I/O. You may download this locally and then upload it onto your Spark Master through the Jupyter browser interface or directly download it from github onto your Spark Master. 
