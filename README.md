@@ -36,7 +36,13 @@ Amazon EMR (Elastic MapReduce) is another option that I have not explored in dep
 
 After installation, read the README in the flintrock github page and try to run a couple of test clusters. After doing so, there are important modifications to make to the configuration file in flintrock. 
 
-I will use use the latest spark version (2.0.2 at the time of this tutorial) to harness the full capabilities of spark. However, there is a known issue with the incompatability of Hadoop 2.6/2.7 with S3 ([SPARK-7442](https://issues.apache.org/jira/browse/SPARK-7442)), and you will get an error when trying to use S3 in the spark interface. To fix this, we simply use Hadoop 2.4 and a Spark version built against Hadoop 2.4 available [here](https://spark.apache.org/downloads.html), for which S3 I/O works. You should specify this in the configuration file as follows:
+I will use use the latest spark version (2.0.2 at the time of this tutorial) to harness the full capabilities of spark. However, there is a known issue with the incompatability of Hadoop 2.6/2.7 with S3 ([SPARK-7442](https://issues.apache.org/jira/browse/SPARK-7442)), and you will get an error when trying to use S3 in the spark interface. To fix this, we simply use Hadoop 2.4 and a Spark version built against Hadoop 2.4 available [here](https://spark.apache.org/downloads.html), for which S3 I/O works. 
+
+Open the configuration file and specify this as follows:
+
+```
+[LocalComputer] flintrock configure
+```
 
 ```yaml
 services:
@@ -56,6 +62,8 @@ services:
     #   - must contain a {v} template corresponding to the version
     #   - must be a .tar.gz file
     # download-source: "https://www.example.com/files/hadoop/{v}/hadoop-{v}.tar.gz"
+    
+(Rest of the file...)
 ```
 All other parameters are up to you. I recommend using HVM AMI's rather than PVM AMI's as all instances on EC2 support HVM but not PVM. I also recommend using t2.micro instances, the simplest HVM instance, to practice the setup as they are covered in the free-tier. 
 
