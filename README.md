@@ -197,7 +197,7 @@ Through my own experiences, the price of EBS volumes outweighs the price of spot
 #### Shrinking your AMI 
 If you created your AMI from the EC2 instance launched from flintrock, the snapshot of the AMI, or the root EBS volume of the AMI, is 30 GB. Our first job is to shrink this volume. 
 
-Although AWS provides an easy way to grow EBS volumes, it does not have a direct method to shrink them. There are many workarounds to shrink an EBS volume (simply google "Shrink EBS Volume" to see), but the general strategy is to create a running EBS volume of your AMI snapshot and a smaller EBS volume of your desired new size and copy the files from the former to the latter. I have tried many methods offered by the community but they either don't work properly or are excessively complicated. Instead, I give a quick and easy solution to our problem at hand (Much thanks to Chris for his help).
+Although AWS provides an easy way to grow EBS volumes, it does not have a direct method to shrink them. There are many workarounds to shrink an EBS volume (simply google "Shrink EBS Volume" to see), but the general strategy is to create a running EBS volume of your AMI snapshot and a smaller EBS volume of your desired new size and copy the files from the former to the latter. Most methods offered by the community either don't work properly or are excessively complicated. Instead, I give a quick and easy solution (Much thanks to Chris for his help).
 
 1. From the EC2 console, create an EBS volume (gp2) based on the snapshot of AMI you wish to shrink.
 2. Create a new EC2 instance using the same OS as your AMI (flintrock default is Amazon Linux AMI) with an EBS volume of your desired size. 
@@ -246,4 +246,3 @@ Many thanks to [Chris Goldsworthy](https://github.com/c4goldsw) for his help.
 ## Sources
 * http://blog.insightdatalabs.com/jupyter-on-apache-spark-step-by-step/
 * https://github.com/nchammas/flintrock
-* https://wiki.archlinux.org/index.php/full_system_backup_with_rsync
