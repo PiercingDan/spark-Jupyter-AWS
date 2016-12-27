@@ -34,7 +34,7 @@ Amazon EMR (Elastic MapReduce) is another option that I have not explored in dep
 
 ## Using Flintrock
 
-After installation, read the README in the flintrock github page and try to run a couple of test clusters. After doing so, there are important modifications to make to the configuration file in flintrock. 
+After installation, read the README in the Flintrock github page and try to run a couple of test clusters. After doing so, there are important modifications to make to the configuration file in Flintrock. 
 
 I use the latest spark version (2.0.2 at the time of this tutorial) to harness the full capabilities of spark. However, there is a known issue with the incompatability of Hadoop 2.6/2.7 with S3 ([SPARK-7442](https://issues.apache.org/jira/browse/SPARK-7442)), and you will get an error when trying to use S3 in the spark interface. To fix this, we simply use Hadoop 2.4 and a Spark version built against Hadoop 2.4 available [here](https://spark.apache.org/downloads.html), for which S3 I/O works. The link below in `download-source` may be deprecated so check with the above website for any updates.
 
@@ -67,7 +67,7 @@ services:
 ```
 All other parameters are up to you. I recommend using HVM AMI's rather than PVM AMI's as all instances on EC2 support HVM but not PVM. I also recommend using t2.micro instances, the simplest HVM instance, to practice the setup as they are covered in the free-tier. 
 
-When finished, simply launch and log into your cluster through the flintrock command line interface. I launch a custom AMI built from the Amazon Linux AMI. To begin, you may simply launch the default Amazon Linux AMI.
+When finished, simply launch and log into your cluster through the Flintrock command line interface. I launch a custom AMI built from the Amazon Linux AMI. To begin, you may simply launch the default Amazon Linux AMI.
 
 ## Installing Anaconda/Jupyter
 Installing Jupyter Notebook and its dependencies can be easily achieved by installing the Anaconda Python distribution. This will also include many important libraries such as numpy, scipy, matplotlib, pandas, etc. You can visit the installation page [here](https://www.continuum.io/downloads#). I download and install the Anaconda 4.2.0 Python 2.7 version while logged into my Spark master with the following commands: 
@@ -81,7 +81,7 @@ After installation, make sure you set your path to Anaconda properly as follows:
 ```
 [SparkMaster] export PATH=/home/user/path/to/anaconda2/bin:$PATH
 ```
-Better yet, place this in your .bashrc file, and save the AMI (detailed in a later section). Next time you may launch clusters using your saved custom AMI through flintrock and your Anaconda path will be automatically set. 
+Better yet, place this in your .bashrc file, and save the AMI (detailed in a later section). Next time you may launch clusters using your saved custom AMI through Flintrock and your Anaconda path will be automatically set. 
 
 Try running Jupyter notebook as a quick test.
 ```
@@ -129,13 +129,13 @@ export memory=1000M
 PYSPARK_DRIVER_PYTHON=jupyter PYSPARK_DRIVER_PYTHON_OPTS="notebook --no-browser --port=7777" pyspark --master spark://$spark_master_hostname:7077 --executor-memory $memory --driver-memory $memory
 ```
 
-You can find your Spark Master Public DNS on the AWS EC2 console. Note that each time you start a cluster, the Public DNS will be different, therefore you will need to alter it with the right DNS. To set the proper amoutn of memory, you can check how much memory there is available on your instances by going to *SparkMasterPublicDNS:/8080* in your browser. Note that flintrock's default security group should have the port 8080 open to your computer by default; if not, then you can change it manually on the EC2 console. 
+You can find your Spark Master Public DNS on the AWS EC2 console. Note that each time you start a cluster, the Public DNS will be different, therefore you will need to alter it with the right DNS. To set the proper amoutn of memory, you can check how much memory there is available on your instances by going to *SparkMasterPublicDNS:/8080* in your browser. Note that Flintrock's default security group should have the port 8080 open to your computer by default; if not, then you can change it manually on the EC2 console. 
 
 Source `jupyter_setup.sh`. By default, jupyter should run on port 7777. Then, to access the notebook on your browser, port forward on your local computer:
 ```
 [LocalComputer] ssh -i ~/path/to/AWSkeypair.pem -N -f -L localhost:7776:localhost:7777 ec2-user@SparkMasterPublicDNS
 ```
-The default user in flintrock is `ec2-user` so that will work most of the time. I have found, annoyingly, that ubuntu instances will require `ubuntu@SparkMasterPublicDNS` instead.
+The default user in Flintrock is `ec2-user` so that will work most of the time. I have found, annoyingly, that ubuntu instances will require `ubuntu@SparkMasterPublicDNS` instead.
 
 Alternatively, you can configure your security group to allow your local computer to access the port directly. 
 
@@ -169,11 +169,11 @@ When I'm finished working and ready to terminate by instances, I run the opposit
 ```
 
 ## Using your own AMI
-You wouldn't want to download and install Anaconda everytime you use spark, and you definitely want to terminate your instances after you're finished using them for cost reasons. The solution here is to save the AMI after running through this tutorial once, so the next time you launch a Spark cluster through flintrock, you already have existing environment set up, i.e. Anaconda installed, AWS credentials set up, etc.
+You wouldn't want to download and install Anaconda everytime you use spark, and you definitely want to terminate your instances after you're finished using them for cost reasons. The solution here is to save the AMI after running through this tutorial once, so the next time you launch a Spark cluster through Flintrock, you already have existing environment set up, i.e. Anaconda installed, AWS credentials set up, etc.
 
-You can save your AMI using the AWS EC2 console. You can specify your custom AMI in the flintrock configuration file, a very useful feature of flintrock not available on spark-ec2. Note that it is important that since flintrock is designed to install and configure Spark every time, it is important that you delete the Spark folder and other files before saving your AMI or you will encounter errors with flintrock. 
+You can save your AMI using the AWS EC2 console. You can specify your custom AMI in the Flintrock configuration file, a very useful feature of Flintrock not available on spark-ec2. Note that it is important that since Flintrock is designed to install and configure Spark every time, it is important that you delete the Spark folder and other files before saving your AMI or you will encounter errors with Flintrock. 
 
-Here's a useful script `clean.sh` to remove all conflicts with the flintrock setup (thanks to Chris).
+Here's a useful script `clean.sh` to remove all conflicts with the Flintrock setup (thanks to Chris).
 
 ```shell
 # A script that can be used to clean an AMI to avoid
@@ -195,12 +195,12 @@ rm -f *
 Through my own experiences, the price of EBS volumes outweighs the price of spot-requested instances. The price for Amazon EBS gp2 volumes is $0.10 per GB-month for US East and since Flintrock sets its default minimum EBS root volume to be 30 GB, the EBS volumes costs about $0.10/hour per instance regardless of the instance type or AMI, whereas spot-requested m3.medium instances cost about $0.01/hour per instance. In addition, a 30 GB hard drive on every worker isn't really necessary for most Spark jobs, since Spark operations are done in-memory. If you follow this guide and use S3 I/O to read and write files, you will barely use your EBS storage. This section will detail how to shrink your EBS volumes to reduce unnecessary costs.
 
 #### Shrinking your AMI 
-If you created your AMI from the EC2 instance launched from flintrock, the snapshot of the AMI, or the root EBS volume of the AMI, is 30 GB. Our first job is to shrink this volume. 
+If you created your AMI from the EC2 instance launched from Flintrock, the snapshot of the AMI, or the root EBS volume of the AMI, is 30 GB. Our first job is to shrink this volume. 
 
 Although AWS provides an easy way to grow EBS volumes, it does not have a direct method to shrink them. There are many workarounds to shrink an EBS volume (simply google "Shrink EBS Volume" to see), but the general strategy is to create a running EBS volume of your AMI snapshot and a smaller EBS volume of your desired new size and copy the files from the former to the latter. Most methods offered by the community either don't work properly or are excessively complicated. Instead, I give a quick and easy solution (Much thanks to Chris for his help).
 
 1. From the EC2 console, create an EBS volume (gp2) based on the snapshot of AMI you wish to shrink.
-2. Create a new EC2 instance using the same OS as your AMI (flintrock default is Amazon Linux AMI) with an EBS volume of your desired size. 
+2. Create a new EC2 instance using the same OS as your AMI (Flintrock default is Amazon Linux AMI) with an EBS volume of your desired size. 
 3. Attach the large AMI volume created in Step 1 to the instance. The default device name is `/dev/sdf`.
 4. Login to your instance.
 5. Run `lsblk` as a check to see all attached volumes. It should look like this (xvda1 refers to the first partition of xvda, the root volume):
@@ -216,14 +216,14 @@ xvdf    202:80   0  30G  0 disk
 6. Make a mount point `sudo mkdir /oldvol`, then mount the attached volume `sudo mount /dev/xvdf1 /oldvol`.
 7. Copy over all the important files from old volume to current root volume `sudo rsync -aAXv --exclude={"/dev/*","/proc/*","/sys/*","/tmp/*","/run/*","/mnt/*","/media/*","/lost+found"} /old/ /`. This will take a couple of minutes.
 8. Unmount the volume `sudo umount /oldvol` and stop the instance.
-9. Make an AMI of your instance, which is now your desired size. Test it out, using flintrock.
+9. Make an AMI of your instance, which is now your desired size. Test it out, using Flintrock.
 
 This method is easier and more straightforward than others given by the community. Since we created our new EBS volume by starting an instance instead of creating an EBS volume from scratch, we do not have to worry about partioning the drive, implementing a file system or setting the root flag to make the volume bootable. We simply copy all important files from our old, large volume to our new, small volume.
 
 #### Modifying Flintrock Source Code
-As of flintrock 0.7.0, the minimum root ebs volume of 30 GB is hardcoded into flintrock (see [my issue](https://github.com/nchammas/flintrock/issues/174)). We have to change the source code of flintrock in order to launch instances with EBS volume under 30 GB. Go to the flintrock directory in your python site-packages folder and modify the argument `min_root_device_size_gb = 30` in `ec2.py` to your desired size.
+As of Flintrock 0.7.0, the minimum root ebs volume of 30 GB is hardcoded into Flintrock (see [my issue](https://github.com/nchammas/flintrock/issues/174)). We have to change the source code of Flintrock in order to launch instances with EBS volume under 30 GB. Go to the Flintrock directory in your python site-packages folder and modify the argument `min_root_device_size_gb = 30` in `ec2.py` to your desired size.
 
-Try running flintrock again with your new AMI and you should see smaller EBS volumes created.
+Try running Flintrock again with your new AMI and you should see smaller EBS volumes created.
 
 ## Next Steps
 The following are tasks that I am currently trying to figure out. They are not crucial but nice-to-have.
