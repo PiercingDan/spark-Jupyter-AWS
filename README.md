@@ -191,20 +191,21 @@ cd /usr/local/bin
 rm -f *
 ```
 
-## Shrinking EBS Boot Volume (Optional)
-Through my own experiences, the price of EBS volumes outweighs the price of spot-requested instances. The price for Amazon EBS gp2 volumes is $0.10 per GB-month for US East and since Flintrock sets its default minimum EBS root volume to be 30 GiB, the EBS volumes costs about $0.10/hour per instance regardless of the instance type or AMI, whereas spot-requested m3.medium instances cost about $0.01/hour per instance. In addition, 30 GiB of EBS storage isn't really necessary for most Spark jobs, since Spark operations are done in-memory. If you follow this guide and use S3 I/O, you will barely use your EBS storage. This section will detail how to shrink your EBS volumes to save unnecessary costs.
+## Shrinking EBS Volume (Optional)
+Through my own experiences, the price of EBS volumes outweighs the price of spot-requested instances. The price for Amazon EBS gp2 volumes is $0.10 per GB-month for US East and since Flintrock sets its default minimum EBS root volume to be 30 GB, the EBS volumes costs about $0.10/hour per instance regardless of the instance type or AMI, whereas spot-requested m3.medium instances cost about $0.01/hour per instance. In addition, a 30 GB hard drive on every worker isn't really necessary for most Spark jobs, since Spark operations are done in-memory. If you follow this guide and use S3 I/O to read and write files, you will barely use your EBS storage. This section will detail how to shrink your EBS volumes to reduce unnecessary costs.
 
 #### Shrinking your AMI 
-If you created your AMI from the EC2 instance launched from flintrock, the snapshot of the AMI, or the root EBS volume of the AMI, is 30 GiB. Our first job is to shrink this volume. 
+If you created your AMI from the EC2 instance launched from flintrock, the snapshot of the AMI, or the root EBS volume of the AMI, is 30 GB. Our first job is to shrink this volume. 
 
-Although AWS provides an easy way to grow EBS volumes, it does not have a direct method to shrink them. There are many workarounds to shrink an EBS volume (simply google "Shrink EBS Volume" to see), but the general strategy is to create a running EBS volume of your AMI snapshot and a smaller EBS volume of your desired new size and copy the files from the former to the latter. I have tried many methods offered by the community but they either don't work or are excessively complicated. Instead, I give a quick and easy solution to our problem at hand (Much thanks to Chris for his help).
+Although AWS provides an easy way to grow EBS volumes, it does not have a direct method to shrink them. There are many workarounds to shrink an EBS volume (simply google "Shrink EBS Volume" to see), but the general strategy is to create a running EBS volume of your AMI snapshot and a smaller EBS volume of your desired new size and copy the files from the former to the latter. I have tried many methods offered by the community but they either don't work properly or are excessively complicated. Instead, I give a quick and easy solution to our problem at hand (Much thanks to Chris for his help).
 
 1. From the EC2 console, create an EBS volume (gp2) based on the snapshot of AMI you wish to shrink.
 2. Create a new EC2 instance using the same OS as your AMI (flintrock default is Amazon Linux AMI) with an EBS volume of your desired size. 
 3. Attach the large AMI volume created in Step 1 to the instance. The default device name is `/dev/sdf`.
 4. Login to your instance.
 5. Run `lsblk` as a check to see all attached volumes. It should look like this (xvda1 refers to the first partition of xvda, the root volume):
-```
+    
+    ```
 [ec2-user@privateipaddress]$ lsblk
 NAME    MAJ:MIN RM SIZE RO TYPE MOUNTPOINT
 xvda    202:0    0  10G  0 disk 
@@ -213,12 +214,16 @@ xvdf    202:80   0  30G  0 disk
 └─xvdf1 202:81   0  30G  0 part 
 ```
 6. Make a mount point `sudo mkdir /oldvol`, then mount the attached volume `sudo mount /dev/xvdf1 /oldvol`.
-7. Copy over all the important files from old volume to current root volume `sudo rsync -aAXv --exclude={"/dev/*","/proc/*","/sys/*","/tmp/*","/run/*","/mnt/*","/media/*","/lost+found"} /old/ /`
+7. Copy over all the important files from old volume to current root volume `sudo rsync -aAXv --exclude={"/dev/*","/proc/*","/sys/*","/tmp/*","/run/*","/mnt/*","/media/*","/lost+found"} /old/ /`. This will take a couple of minutes.
+8. Unmount the volume `sudo umount /oldvol` and stop the instance.
+9. Make an AMI of your instance, which is now your desired size. Test it out, using flintrock.
 
 This method is easier and more straightforward than others given by the community. Since we created our new EBS volume by starting an instance instead of creating an EBS volume from scratch, we do not have to worry about partioning the drive, implementing a file system or setting the root flag to make the volume bootable. We simply copy all important files from our old, large volume to our new, small volume.
 
 #### Modifying Flintrock Source Code
-https://github.com/nchammas/flintrock/issues/174
+As of flintrock 0.7.0, the minimum root ebs volume of 30 GB is hardcoded into flintrock (see [my issue](https://github.com/nchammas/flintrock/issues/174)). We have to change the source code of flintrock in order to launch instances with EBS volume under 30 GB. Go to the flintrock directory in your python site-packages folder and modify the argument `min_root_device_size_gb = 30` in `ec2.py` to your desired size.
+
+Try running flintrock again with your new AMI and you should see smaller EBS volumes created.
 
 ## Next Steps
 The following are tasks that I am currently trying to figure out. They are not crucial but nice-to-have.
@@ -241,3 +246,4 @@ Many thanks to [Chris Goldsworthy](https://github.com/c4goldsw) for his help.
 ## Sources
 * http://blog.insightdatalabs.com/jupyter-on-apache-spark-step-by-step/
 * https://github.com/nchammas/flintrock
+* https://wiki.archlinux.org/index.php/full_system_backup_with_rsync
