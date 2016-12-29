@@ -171,7 +171,7 @@ When I'm finished working and ready to terminate by instances, I run the opposit
 ## Using your own AMI
 You wouldn't want to download and install Anaconda everytime you use spark, and you definitely want to terminate your instances after you're finished using them for cost reasons. The solution here is to save the AMI after running through this tutorial once, so the next time you launch a Spark cluster through Flintrock, you already have existing environment set up, i.e. Anaconda installed, AWS credentials set up, etc.
 
-You can save your AMI using the AWS EC2 console. You can specify your custom AMI in the Flintrock configuration file, a very useful feature of Flintrock not available on spark-ec2. Note that it is important that since Flintrock is designed to install and configure Spark every time, it is important that you delete the Spark folder and other files before saving your AMI or you will encounter errors with Flintrock. 
+You can save your AMI using the AWS EC2 console. You can specify your custom AMI in the Flintrock configuration file, a very useful feature of Flintrock not available on spark-ec2. Note that since Flintrock by default installs and configures Spark on each node, it is important that you delete the Spark folder and other files before saving your AMI or you will encounter conflicts with Flintrock when booting from your custom AMI. 
 
 Here's a useful script `clean.sh` to remove all conflicts with the Flintrock setup (thanks to Chris).
 
@@ -189,6 +189,12 @@ rm -rf $HOME/spark
 
 cd /usr/local/bin
 rm -f *
+```
+
+It is also possible to tell Flintrock not to install Spark, if you ever should need to.
+
+```
+[LocalComputer] flintrock launch my-cluster --no-install-spark
 ```
 
 ## Shrinking EBS Volume (Optional)
