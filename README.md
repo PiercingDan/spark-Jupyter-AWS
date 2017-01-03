@@ -90,7 +90,7 @@ Try running Jupyter notebook as a quick test.
 Press Ctrl-C to exit.
 
 ## Using tmux (Optional)
-You may have noticed in the previous command, or know from previous uses, that running jupyter notebook will hinder you from running any more commands in the same terminal. A simple workaround would be to open up another terminal and login a second time, but this can get tedious. I prefer to use `tmux`, a useful tool that allows you split up your terminal. You can install it from the terminal, for example, on Amazon Linux, run:
+You may have noticed in the previous command, or know from previous uses, that running jupyter notebook will hinder you from running any more commands in the same terminal. We want to be able to monitor the condition of PySpark driver while running other terminal commands. A simple workaround would be to open up another terminal and login a second time, but I prefer to use `tmux`, a useful tool that allows you split up your terminal. You can install it from the terminal, for example, on Amazon Linux, run:
 ```
 [SparkMaster] sudo yum update
 [SparkMaster] sudo yum install tmux
