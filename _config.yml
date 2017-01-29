@@ -1,0 +1,8 @@
+title: Spark-jupyter-aws
+description: A guide on how to set up Jupyter with Pyspark painlessly on AWS EC2 clusters, supporting S3 I/O
+google_analytics: 
+show_downloads: true
+theme: jekyll-theme-cayman
+
+gems:
+  - jekyll-mentions
