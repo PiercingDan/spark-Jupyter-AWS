@@ -235,7 +235,7 @@ Try running Flintrock again with your new AMI and you should see smaller EBS vol
 The following are tasks that I am currently trying to figure out. They are not crucial but nice-to-have.
 
 * How to read zip csv files from S3 as Spark DF or RDD without too much hassle
-* ~~How to shrink EBS volume size launches, EBS costs are greatly outweighing spot-requested EC2 instances cost~~ See added section.
+* ~~How to shrink EBS volume size launches, EBS costs are greatly outweighing spot-requested EC2 instances cost~~ (Section Added)
 
 ## Conclusion
 Thanks for reading this guide! If this guide helped you, please give it a star on github. If you have any problems, create an issue.
