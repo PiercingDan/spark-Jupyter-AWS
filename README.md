@@ -106,9 +106,9 @@ Then, launch tmux with the command:
 You can familiarize yourself with the tmux commands [here](https://gist.github.com/MohamedAlaa/2961058).
 
 ## Launching Jupyter with PySpark
-First, add the following lines in our `.bashrc` file at the end of the file.
+First, add the following lines at the end of our `.bashrc` file, found in the home directory.
 ```shell
-#Amazon Keys
+#Amazon Keys (Substitute your credentials here)
 export AWS_ACCESS_KEY_ID=XXXXXXXXXXXXXXXXXXX
 export AWS_SECRET_ACCESS_KEY=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
