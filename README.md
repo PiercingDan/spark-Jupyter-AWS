@@ -14,7 +14,9 @@ This guide was motivated by my involvement in the University of Toronto Data Sci
 The idea to use Jupyter Notebook with PySpark was due to my own affinity for Jupyter and python. Jupyter Notebook is highly effective for data science as it allows users to easily interact with their models and try many different approaches quickly. Jupyter also nicely embeds images, plots and tables for data visualization. Together with the numerous python libraries available, there is no end to the things you can do.
 
 ## Getting Started with AWS
-AWS, short for [Amazon Web Services](https://aws.amazon.com/), is a popular cloud computing service. You will have to sign up for an account and have your credit card on hand. AWS does have a 1-year 'free' tier plan, which I am currently on, but it covers very limited services and I easily supercede the allotted amount and pay out of my own pocket. It is easy to rack up serious charges if you're not careful. This tutorial will use the cloud computing service EC2 and the cloud storage service S3. Try running a test cluster from AWS EC2 interface and uploading files onto a S3 bucket if you are not familiar with AWS.
+AWS, short for [Amazon Web Services](https://aws.amazon.com/), is a popular cloud computing service. You will have to sign up for an account and have your credit card on hand. AWS does have a 1-year 'free' tier plan, which I am currently on, but it covers only certain services and to do any serious type of computing, you will need to pay out of your own pocket. It is easy to rack up serious charges if you're not careful. This tutorial will use the cloud computing service EC2 and the cloud storage service S3. Try running a test cluster from AWS EC2 interface and uploading files onto a S3 bucket if you are not familiar with AWS.
+
+*Note: We will mainly use low-cost instances and storage, the total cost of running through this tutorial should not exceed a couple of dollars.*
 
 For the following tutorial, you will need:
 * [Amazon EC2 Key Pair](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html) to log into your instances
