@@ -3,9 +3,7 @@
 
 A guide on how to set up Jupyter with Pyspark painlessly on AWS EC2 instances using the tool [Flintrock](https://github.com/nchammas/flintrock), with S3 I/O support. 
 
-<img src="images/apachespark.jpg" alt="Drawing" width="280"/>
-<img src="images/jupyter.png" alt="Drawing" width="280"/>
-<img src="images/aws.png" alt="Drawing" width="280"/>
+<img src="images/apachespark.jpg" alt="Drawing" width="270"/> <img src="images/jupyter.png" alt="Drawing" width="270"/> <img src="images/aws.png" alt="Drawing" width="270"/>
 
 
 ## Introduction
