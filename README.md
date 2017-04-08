@@ -38,6 +38,8 @@ After installation, read the README in the Flintrock github page and try to run 
 
 I use the latest spark version (2.0.2 at the time of this tutorial) to harness the full capabilities of spark. However, there is a known issue with the incompatability of Hadoop 2.6/2.7 with S3 ([SPARK-7442](https://issues.apache.org/jira/browse/SPARK-7442)), and you will get an error when trying to use S3 in the spark interface. To fix this, we simply use Hadoop 2.4 and a Spark version built against Hadoop 2.4 available [here](https://spark.apache.org/downloads.html), for which S3 I/O works. The link below in `download-source` may be deprecated so check with the above website for any updates.
 
+(UPDATE: This has been addressed in [Flintrock's](https://github.com/nchammas/flintrock) updates. I have not tried it for myself. The following method has worked for me.)
+
 Open the configuration file and specify this as follows:
 
 ```
