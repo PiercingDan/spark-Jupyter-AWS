@@ -213,14 +213,15 @@ Although AWS provides an easy way to grow EBS volumes, it does not have a direct
 4. Login to your instance.
 5. Run `lsblk` as a check to see all attached volumes. It should look like this (xvda1 refers to the first partition of xvda, the root volume):
     
-    ```
-[ec2-user@privateipaddress]$ lsblk
-NAME    MAJ:MIN RM SIZE RO TYPE MOUNTPOINT
-xvda    202:0    0  10G  0 disk 
-└─xvda1 202:1    0  10G  0 part /
-xvdf    202:80   0  30G  0 disk 
-└─xvdf1 202:81   0  30G  0 part 
-```
+  ```
+  [ec2-user@privateipaddress]$ lsblk
+  NAME    MAJ:MIN RM SIZE RO TYPE MOUNTPOINT
+  xvda    202:0    0  10G  0 disk 
+  └─xvda1 202:1    0  10G  0 part /
+  xvdf    202:80   0  30G  0 disk 
+  └─xvdf1 202:81   0  30G  0 part 
+  ```
+
 6. Make a mount point `sudo mkdir /oldvol`, then mount the attached volume `sudo mount /dev/xvdf1 /oldvol`.
 7. Copy over all the important files from old volume to current root volume `sudo rsync -aAXv --exclude={"/dev/*","/proc/*","/sys/*","/tmp/*","/run/*","/mnt/*","/media/*","/lost+found"} /old/ /`. This will take a couple of minutes.
 8. Unmount the volume `sudo umount /oldvol` and stop the instance.
