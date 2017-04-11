@@ -230,7 +230,7 @@ Although AWS provides an easy way to grow EBS volumes, it does not have a direct
 This method is easier and more straightforward than others given by the community. Since we created our new EBS volume by starting an instance instead of creating an EBS volume from scratch, we do not have to worry about partioning the drive, implementing a file system or setting the root flag to make the volume bootable. We simply copy all important files from our old, large volume to our new, small volume.
 
 #### Modifying Flintrock Source Code
-As of Flintrock 0.7.0, the minimum root ebs volume of 30 GB is hardcoded into Flintrock (see [my issue](https://github.com/nchammas/flintrock/issues/174)). We have to change the source code of Flintrock in order to launch instances with EBS volume under 30 GB. Go to the Flintrock directory in your python site-packages folder and modify the argument `min_root_device_size_gb = 30` in `ec2.py` to your desired size.
+As of Flintrock 0.7.0, the minimum root ebs volume of 30 GB is hardcoded into Flintrock (see [my issue](https://github.com/nchammas/flintrock/issues/174)). We have to change the source code of Flintrock in order to launch instances with EBS volume under 30 GB. Go to the Flintrock directory in your python `site-packages` folder and modify the argument `min_root_device_size_gb = 30` in `ec2.py` to your desired size.
 
 Try running Flintrock again with your new AMI and you should see smaller EBS volumes created.
 
