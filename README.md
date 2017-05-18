@@ -1,7 +1,7 @@
 # Spark with Jupyter on AWS
 *By [Danny Luo](https://www.linkedin.com/in/danny-luo-277a93b8)*
 
-A guide on how to set up Jupyter with Pyspark painlessly on AWS EC2 instances using the tool [Flintrock](https://github.com/nchammas/flintrock), with S3 I/O support. 
+A guide on how to set up Jupyter with Pyspark painlessly on AWS EC2 instances using the [Flintrock](https://github.com/nchammas/flintrock) tool, with native S3 I/O support. Scala support on Jupyter is currently being investigated.
 
 <img src="images/apachespark.jpg" alt="Drawing" width="288"/> <img src="images/jupyter.png" alt="Drawing" width="288"/> <img src="images/aws.png" alt="Drawing" width="288"/>
 
