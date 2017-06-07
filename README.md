@@ -30,7 +30,7 @@ There are many ways to set up spark with AWS EC2 instances, including:
 
 One could start EC2 instances and manually link the workers to the master. However, this is tedious and difficult to scale. I have used the spark-ec2 tool and although it gets the job done, the tool is not easy to use. It has slow launches for large clusters, clumsy command line integration without config file support, unresizable clusters and many other shortcomings. Flintrock, created by Nicholas Chammas, is the answer to spark-ec2's deficiencies. Like spark-ec2, it is also a command-line tool for launching Apache Spark clusters except it is easier to use and has more features. You can install it at the link above. This tutorial uses Flintrock 0.6.0.
 
-Amazon EMR (Elastic MapReduce) is another option that I have not explored in depth. It seems like a solid service offered by Amazon to run and scale Hadoop/Spark and other Big Data frameworks. However, there is an [Amazon EMR cost](https://aws.amazon.com/emr/pricing/) in addition to the cost of the EC2 instances, which made me want to try to setup my own spark clusters using third-party tools at no extra expense.
+Amazon EMR (Elastic MapReduce) is another option that I have not explored in depth. It seems like a solid service offered by Amazon to run and scale Hadoop/Spark and other Big Data frameworks. However, there is an [Amazon EMR cost](https://aws.amazon.com/emr/pricing/) in addition to the cost of the EC2 instances, which made me want to try bootstrapping my own spark clusters using third-party, open-source tools at no extra expense.
 
 ## Using Flintrock
 
