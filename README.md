@@ -242,13 +242,15 @@ The following are tasks that I am currently trying to figure out. They are not c
 * ~~How to shrink EBS volume size launches, EBS costs are greatly outweighing spot-requested EC2 instances cost~~ (Section Added)
 
 ## Conclusion
-Thanks for reading this guide! If this guide helped you, please give it a star on github. If you have any problems, create an issue.
+Thanks for reading this guide! If this guide helped you, give it a star on github. If you have any problems, create an issue.
 
 ## About Me
-I am currently a student in Math & Physics at the University of Toronto, with a deep interest in data science, machine learning and big data. 
+I am an Undergraduate student in Math & Physics at the University of Toronto, with a deep interest in data science, machine learning and big data. 
 
 * [linkedin](https://www.linkedin.com/in/danny-luo-277a93b8)
 * [github](https://github.com/PiercingDan)
+
+Check out this blog post I co-authored: [Spark Performance Tuning: A Checklist](https://zerogravitylabs.ca/spark-performance-tuning-checklist/), which details resolutions of common Spark performance issues. Featured on [Roaring Elephant- Bite-Sized Big Data](https://roaringelephant.org/2017/10/03/episode-55-roaring-news/) podcast.
 
 ## Acknowledgements
 Many thanks to [Chris Goldsworthy](https://github.com/c4goldsw) for his help. 
